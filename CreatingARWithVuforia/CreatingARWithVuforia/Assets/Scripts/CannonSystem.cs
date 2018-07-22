@@ -3,6 +3,16 @@
 
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine;
+using System; 
+using System.Collections;
+using System.Collections.Generic;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Driver.Builders;  
+using MongoDB.Driver.GridFS;  
+using MongoDB.Driver.Linq;
+
 
 public class CannonSystem : MonoBehaviour 
 {
@@ -17,6 +27,8 @@ public class CannonSystem : MonoBehaviour
 	bool canShoot = true;
 	Animator anim;								//Reference to the animator component
 
+	string connectionString = "mongodb://trapos:trapos@ds055515.mlab.com:55515/elementos";
+	
 
 	void Awake()
 	{
@@ -26,6 +38,9 @@ public class CannonSystem : MonoBehaviour
 
 		//Get a reference to the animator component
 		anim = GetComponent<Animator> ();
+
+		
+		
 	}
 
 	public void FireProjectile()
@@ -37,6 +52,21 @@ public class CannonSystem : MonoBehaviour
 		Vector3 force = projectileSpawnTransform.transform.forward * maxProjectileForce;
 		go.GetComponent<Rigidbody>().AddForce(force) ;
 		anim.SetTrigger ("Fire");
+
+		var client = new MongoClient(connectionString);
+		var server = client.GetServer(); 
+		var database = server.GetDatabase("elementos");
+		var playercollection= database.GetCollection<BsonDocument>("players");
+		Debug.Log ("1. ESTABLISHED CONNECTION");
+
+		playercollection.Insert(new BsonDocument{
+			{ "level", 7 },
+			{ "name", "Fabi" },
+			{ "scores", 4711 },
+			{ "email", "ff023@hdm-s.de" }
+		});
+		Debug.Log ("2. INSERTED A DOC");
+		
 
 		canShoot = false;
 		Invoke("CoolDown", cooldown);
