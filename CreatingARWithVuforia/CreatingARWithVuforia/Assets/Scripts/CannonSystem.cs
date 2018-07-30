@@ -14,6 +14,7 @@ using MongoDB.Driver.GridFS;
 using MongoDB.Driver.Linq;
 
 
+
 public class CannonSystem : MonoBehaviour 
 {
 	[Header("Firing Properties")]
@@ -27,10 +28,11 @@ public class CannonSystem : MonoBehaviour
 	bool canShoot = true;
 	Animator anim;								//Reference to the animator component
 
-	string connectionString = "mongodb://trapos:trapos@ds055515.mlab.com:55515/elementos";
-	
+	string connectionString = "mongodb://trapos:trapos1@ds259351.mlab.com:59351/museo";
+    String visitantes;
 
-	void Awake()
+
+    void Awake()
 	{
 		//Get a reference to the projectile spawn point. By providing the path to the object like this, we are making an 
 		//inefficient method call more efficient
@@ -48,22 +50,37 @@ public class CannonSystem : MonoBehaviour
 		if (!canShoot)
 			return;
 
+        //animacion de disparo
 		GameObject go = (GameObject)Instantiate(projectilePrefab, projectileSpawnTransform.position, projectileSpawnTransform.rotation);
 		Vector3 force = projectileSpawnTransform.transform.forward * maxProjectileForce;
 		go.GetComponent<Rigidbody>().AddForce(force) ;
 		anim.SetTrigger ("Fire");
 
+        //Conexion a mongoDB y seleccion de BD y coleccion
 		var client = new MongoClient(connectionString);
 		var server = client.GetServer(); 
-		var database = server.GetDatabase("elementos");
-		var playercollection= database.GetCollection<BsonDocument>("players");
+		var database = server.GetDatabase("museo");
+		var playercollection= database.GetCollection<BsonDocument>("visitors");
 		Debug.Log ("1. ESTABLISHED CONNECTION");
 
-		playercollection.Insert(new BsonDocument{
-			{ "level", 7 },
-			{ "name", "Fabi" },
-			{ "scores", 4711 },
-			{ "email", "ff023@hdm-s.de" }
+        //contador de visitantes por 
+        
+        foreach (var document in playercollection.Find(new QueryDocument("expo", "mars turret")))
+        {
+            var conteo = document;
+            Debug.Log("6. SELECT DOC WHERE: \n" + document);
+            Debug.Log("16. COUNT DOCS: \n" + playercollection.Count(new QueryDocument("expo", "mars turret")));
+            visitantes = playercollection.Count(new QueryDocument("expo", "mars turret")).ToString();
+        }
+
+        String timeStamp = DateTime.Now.ToString();
+        
+        
+
+        playercollection.Insert(new BsonDocument{
+			{ "expo", "mars turret" },
+            { "visitante", visitantes },
+            { "tiempo_interaccion", timeStamp }
 		});
 		Debug.Log ("2. INSERTED A DOC");
 		

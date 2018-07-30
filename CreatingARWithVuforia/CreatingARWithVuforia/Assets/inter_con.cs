@@ -6,10 +6,11 @@ public class inter_con : MonoBehaviour {
 	
 	public AudioClip[] aClips;
 	public AudioSource myAudioSource;
-	string btnNAme; 
+	string btnNAme;
+    public Animator anim;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		myAudioSource = GetComponent<AudioSource>();
 	}
 	
@@ -23,6 +24,7 @@ public class inter_con : MonoBehaviour {
 				btnNAme = Hit.transform.name;
 				switch (btnNAme){
                     case "Btn_Text1":
+                        anim.Play("BunkerFire");
 					 myAudioSource.clip = aClips[0];
 					 myAudioSource.Play();
 					 break;
