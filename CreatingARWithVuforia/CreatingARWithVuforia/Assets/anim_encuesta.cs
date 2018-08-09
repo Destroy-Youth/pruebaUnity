@@ -10,13 +10,11 @@ using MongoDB.Driver.Builders;
 using MongoDB.Driver.GridFS;
 using MongoDB.Driver.Linq;
 
-public class animWhale : MonoBehaviour {
+public class anim_encuesta : MonoBehaviour {
 
     string connectionString = "mongodb://trapos:trapos1@ds259351.mlab.com:59351/museo";
     string visitantes;
 
-    public Animator anim;
-    public AudioClip[] aClips;
     public AudioSource myAudioSource;
     string btnNAme;
 
@@ -37,19 +35,7 @@ public class animWhale : MonoBehaviour {
             if (Physics.Raycast(ray, out Hit))
             {
                 btnNAme = Hit.transform.name;
-                switch (btnNAme)
-                {
-                    case "btnText2":
-                        //anim.Play("dive");
-                        myAudioSource.clip = aClips[0];
-                        myAudioSource.Play();
-                        break;
-
-                    case "btnText_NarWhale":
-                        //anim.Play("dive");
-                        myAudioSource.clip = aClips[1];
-                        myAudioSource.Play();
-
+               
                         //Conexion a mongoDB y seleccion de BD y coleccion
                         var client = new MongoClient(connectionString);
                         var server = client.GetServer();
@@ -61,18 +47,16 @@ public class animWhale : MonoBehaviour {
 
                         String timeStamp = DateTime.Now.ToString();
                         playercollection.Insert(new BsonDocument{
-                            { "expo", "ballena" },
+                            { "expo", "encuesta" },
                             { "visitante", "" },
+                            { "reaccion", btnNAme},
                             { "tiempo_interaccion", timeStamp }
                         });
                         Debug.Log("2. INSERTED A DOC");
 
-                        break;
-
-                    default:
-                        break;
-                }
+                       
             }
+            
         }
     }
 }

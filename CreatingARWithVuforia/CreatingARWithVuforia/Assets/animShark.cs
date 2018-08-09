@@ -10,8 +10,7 @@ using MongoDB.Driver.Builders;
 using MongoDB.Driver.GridFS;
 using MongoDB.Driver.Linq;
 
-public class animWhale : MonoBehaviour {
-
+public class animShark : MonoBehaviour {
     string connectionString = "mongodb://trapos:trapos1@ds259351.mlab.com:59351/museo";
     string visitantes;
 
@@ -39,14 +38,15 @@ public class animWhale : MonoBehaviour {
                 btnNAme = Hit.transform.name;
                 switch (btnNAme)
                 {
-                    case "btnText2":
-                        //anim.Play("dive");
+                    case "btnText_SoundShark":
+                        anim.Play("eat");
+                        anim.Play("swim");
                         myAudioSource.clip = aClips[0];
                         myAudioSource.Play();
                         break;
 
-                    case "btnText_NarWhale":
-                        //anim.Play("dive");
+                    case "btnText_NarShark":
+                        anim.Play("fastswim");
                         myAudioSource.clip = aClips[1];
                         myAudioSource.Play();
 
@@ -61,7 +61,7 @@ public class animWhale : MonoBehaviour {
 
                         String timeStamp = DateTime.Now.ToString();
                         playercollection.Insert(new BsonDocument{
-                            { "expo", "ballena" },
+                            { "expo", "tiburon" },
                             { "visitante", "" },
                             { "tiempo_interaccion", timeStamp }
                         });
@@ -72,6 +72,10 @@ public class animWhale : MonoBehaviour {
                     default:
                         break;
                 }
+            }
+            else
+            {
+                anim.Play("swim");
             }
         }
     }
